@@ -1,0 +1,42 @@
+{
+  "name": "humweb/teams",
+  "description": "Laravel 5 Teams",
+  "keywords": [
+    "teams",
+    "groups",
+    "laravel"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ryan Shofner",
+      "email": "ryun@humboldtweb.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "illuminate/database": "~5.5",
+    "illuminate/support": "~5.5",
+    "illuminate/filesystem": "~5.5",
+    "illuminate/config": "~5.5",
+    "illuminate/mail": "~5.5"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^3.5",
+    "fzaninotto/faker": "~1.4",
+    "phpunit/php-code-coverage": "^5.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Humweb\\Teams\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/TestCase.php"
+    ],
+    "psr-4": {
+      "Humweb\\Teams\\Tests\\": "tests/"
+    }
+  }
+}
