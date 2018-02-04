@@ -2,9 +2,12 @@
 
 namespace Humweb\Teams\Tests;
 
+use Humweb\Teams\Events\UserJoinedTeam;
+use Humweb\Teams\Events\UserLeftTeam;
 use Humweb\Teams\Tests\Helpers\CreatesTeams;
 use Humweb\Teams\Tests\Stubs\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Event;
 
 /**
  * Class AddTransactionTest
@@ -71,20 +74,6 @@ class TeamUserTraitTest extends TestCase
 
 
     /**
-     * Reset current team
-     *
-     * @test
-     */
-    public function it_will_reset_current_team_when_current_team_id_is__set_to_null()
-    {
-        $team = $this->createTeam($this->user);
-        $this->user->forceFill(['current_team_id' => null])->save();
-
-        $this->assertEquals($team->id, $this->user->currentTeam->id);
-    }
-
-
-    /**
      * @method switchTeam
      * @test
      */
@@ -114,25 +103,14 @@ class TeamUserTraitTest extends TestCase
         $this->assertTrue($this->user->isOwnerOfTeam($team));
     }
 
-    /**
-     * @method isOwnerOfTeam
-     * @test
-     */
-    public function it_allows_user_to_join_a_team()
-    {
-        $team = $this->createTeam($this->user);
-        $this->assertTrue($this->user->isOwnerOfTeam($team));
-        $this->user->leaveTeam($team);
-        $this->assertFalse($this->user->ownsAnyTeams());
-    }
-
 
     /**
      * @method joinTeam
      * @test
      */
-    public function it_allows_user_to_leave_a_team()
+    public function it_allows_user_to_join_a_team()
     {
+        Event::fake();
         $this->assertFalse($this->user->ownsAnyTeams());
 
         $team = $this->createTeam();
@@ -140,10 +118,28 @@ class TeamUserTraitTest extends TestCase
         $this->assertFalse($team->isMember($this->user));
         $this->user->joinTeam($team);
         $this->assertTrue($team->isMember($this->user));
+        Event::assertDispatched(UserJoinedTeam::class);
     }
+
+
+    /**
+     * @method isOwnerOfTeam
+     * @test
+     */
+    public function it_allows_user_to_leave_a_team()
+    {
+        Event::fake();
+        $team = $this->createTeam($this->user);
+        $this->assertTrue($this->user->isOwnerOfTeam($team));
+        $this->user->leaveTeam($team);
+        $this->assertFalse($this->user->ownsAnyTeams());
+        Event::assertDispatched(UserLeftTeam::class);
+    }
+
 
     /**
      * Removes orphaned entires from pivot table
+     *
      * @test
      */
     public function it_deletes_entries_from_pivot_table_when_a_user_is_deleted()

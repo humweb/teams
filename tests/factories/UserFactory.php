@@ -16,7 +16,6 @@ use Humweb\Teams\Tests\Stubs\User;
 
 $factory->define(User::class, function (Faker $faker) {
     static $password;
-
     return [
         'name'     => $faker->firstName(),
         'email'          => $faker->unique()->safeEmail,

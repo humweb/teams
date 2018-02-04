@@ -6,13 +6,6 @@ use Humweb\Teams\Events\UserJoinedTeam;
 use Humweb\Teams\Events\UserLeftTeam;
 use Humweb\Teams\Models\Invitation;
 use Humweb\Teams\Models\Team;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Config;
-
-//use Mpociot\Teamwork\Events\UserJoinedTeam;
-//use Mpociot\Teamwork\Events\UserLeftTeam;
-//use Mpociot\Teamwork\Exceptions\UserNotInTeamException;
 
 trait TeamUserTrait
 {
@@ -23,7 +16,9 @@ trait TeamUserTrait
      */
     public function teams()
     {
-        return $this->belongsToMany(Team::class, 'team_members', 'user_id', 'team_id')->orderBy('name', 'asc')->withTimestamps();
+        return $this->belongsToMany(Team::class, 'team_members', 'user_id', 'team_id')
+                    ->orderBy('name', 'asc')
+                    ->withTimestamps();
     }
 
 
@@ -69,7 +64,6 @@ trait TeamUserTrait
     {
         return $this->teams()->where("owner_id", "=", $this->id);
     }
-
 
 
     /**
