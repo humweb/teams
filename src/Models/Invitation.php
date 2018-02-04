@@ -19,19 +19,6 @@ class Invitation extends Model
      */
     protected $table = 'team_invitations';
 
-    /**
-     * The guarded attributes on the model.
-     *
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [];
 
     /**
      * Get the team that owns the invitation.
@@ -49,5 +36,15 @@ class Invitation extends Model
     public function isExpired()
     {
         return Carbon::now()->subWeek()->gte($this->created_at);
+    }
+
+    /**
+     * Determine if the invitation is expired.
+     *
+     * @return bool
+     */
+    public function scopeNotExpired($query)
+    {
+        return $query->whereDate('created_at', '<=', Carbon::now()->subWeek());
     }
 }
