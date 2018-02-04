@@ -73,23 +73,24 @@ class Team extends Model
     public function inviteUserByEmail($email)
     {
         $model       = config('teams.user_model');
-        $invitedUser = (new $model)->where('email', $email)->first();
+        $user = (new $model)->where('email', $email)->first();
         $invitation  = $this->invitations()->where('email', $email)->first();
 
         if (is_null($invitation)) {
             $invitation = $this->invitations()->create([
-                'user_id' => $invitedUser ? $invitedUser->id : null,
+                'user_id' => $user ? $user->id : null,
                 'email'   => $email,
                 'token'   => str_random(40),
             ]);
         }
-        
-        $view = is_null($invitedUser) ? 'teams::emails.team.invitations.new'
+
+        $view = is_null($user) ? 'teams::emails.team.invitations.new'
             : 'teams::emails.team.invitations.existing';
 
         Mail::send($email, [
+            'team'       => $this,
             'invitation' => $invitation,
-            'user'       => $invitedUser ?: null
+            'user'       => $user ?: null
         ], function ($mail) use ($invitation) {
             $mail->to($invitation->email)->subject('New Invitation!');
         });
