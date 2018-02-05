@@ -19,6 +19,12 @@ class Invitation extends Model
      */
     protected $table = 'team_invitations';
 
+    /**
+     * The attributes that are fillable via mass assignment.
+     *
+     * @var array
+     */
+    protected $fillable = ['user_id', 'email', 'token'];
 
     /**
      * Get the team that owns the invitation.
@@ -35,7 +41,7 @@ class Invitation extends Model
      */
     public function isExpired()
     {
-        return Carbon::now()->subWeek()->gte($this->created_at);
+        return Carbon::now()->subWeek()->startOfDay()->gte($this->created_at);
     }
 
     /**
@@ -45,6 +51,6 @@ class Invitation extends Model
      */
     public function scopeNotExpired($query)
     {
-        return $query->whereDate('created_at', '<=', Carbon::now()->subWeek());
+        return $query->whereDate('created_at', '>=', Carbon::now()->subDays(7)->startOfDay()->toDateString());
     }
 }
