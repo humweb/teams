@@ -33,10 +33,10 @@ class CreateTeamsTables extends Migration
             $table->timestamps();
         });
 
-        Schema::create('invitations', function (Blueprint $table) {
+        Schema::create('team_invitations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('team_id')->index();
-            $table->integer('user_id')->index();
+            $table->integer('user_id')->nullable()->index();
             $table->string('email');
             $table->string('token', 40)->unique();
             $table->timestamps();
