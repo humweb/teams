@@ -15,11 +15,7 @@ class InvitationController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', [
-            'except' => [
-                'getInvitation',
-            ]
-        ]);
+        $this->middleware('auth');
     }
 
 
