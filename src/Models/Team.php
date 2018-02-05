@@ -2,6 +2,7 @@
 
 namespace Humweb\Teams\Models;
 
+use Humweb\Teams\Mail\TeamInvitation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 
@@ -72,9 +73,9 @@ class Team extends Model
      */
     public function inviteUserByEmail($email)
     {
-        $model       = config('teams.user_model');
-        $user = (new $model)->where('email', $email)->first();
-        $invitation  = $this->invitations()->where('email', $email)->first();
+        $model      = config('teams.user_model');
+        $user       = (new $model)->where('email', $email)->first();
+        $invitation = $this->invitations()->where('email', $email)->first();
 
         if (is_null($invitation)) {
             $invitation = $this->invitations()->create([
@@ -84,16 +85,7 @@ class Team extends Model
             ]);
         }
 
-        $view = is_null($user) ? 'teams::emails.team.invitations.new'
-            : 'teams::emails.team.invitations.existing';
-
-        Mail::send($email, [
-            'team'       => $this,
-            'invitation' => $invitation,
-            'user'       => $user ?: null
-        ], function ($mail) use ($invitation) {
-            $mail->to($invitation->email)->subject('New Invitation!');
-        });
+        Mail::to($invitation->email)->send(new TeamInvitation($invitation, $this, $user));
 
         return $invitation;
     }
