@@ -41,7 +41,7 @@ class Invitation extends Model
      */
     public function isExpired()
     {
-        return Carbon::now()->subWeek()->startOfDay()->gte($this->created_at);
+        return Carbon::now()->subDays(7)->startOfDay()->gte($this->created_at->startOfDay());
     }
 
     /**
@@ -51,6 +51,6 @@ class Invitation extends Model
      */
     public function scopeNotExpired($query)
     {
-        return $query->whereDate('created_at', '>=', Carbon::now()->subDays(7)->startOfDay()->toDateString());
+        return $query->whereDate('created_at', '>', Carbon::now()->subDays(7)->startOfDay());
     }
 }

@@ -5,7 +5,7 @@
  * Time: 7:13 PM
  */
 
-namespace Humweb\Teams;
+namespace Humweb\Teams\Providers;
 
 use Humweb\Teams\Events\UserJoinedTeam;
 use Humweb\Teams\Events\UserLeftTeam;

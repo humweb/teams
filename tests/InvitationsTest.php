@@ -60,26 +60,19 @@ class InvitationsTest extends TestCase
         Carbon::setTestNow(Carbon::now()->subDays(8)->startOfDay());
         $team->inviteUserByEmail('foo@gmail.com');
         Carbon::setTestNow();
-        $invitation = Invitation::where('email', 'foo@gmail.com')->firstOrFail();
-        $invitation1 = Invitation::where('email', 'foo@gmail.com')->notExpired()->first();
-        $this->assertTrue($invitation->isExpired());
-        $this->isNull($invitation1);
+        $expiredInvitation  = Invitation::where('email', 'foo@gmail.com')->firstOrFail();
+        $nullInvitation = Invitation::where('email', 'foo@gmail.com')->notExpired()->first();
+        $this->assertTrue($expiredInvitation->isExpired());
+        $this->isNull($nullInvitation);
 
-        Carbon::setTestNow(Carbon::now()->subDays(7)->startOfDay());
+        Carbon::setTestNow(Carbon::now()->subDays(6)->startOfDay());
         $team->inviteUserByEmail('foo2@gmail.com');
-//        dd(Carbon::now());
-        Carbon::setTestNow();
-        $invitation2 = Invitation::where('email', 'foo2@gmail.com')->first();
-
-//        DB::listen(function($q){
-//            dd($q->sql,$q->bindings);
-//        });
-        $invitation22 = Invitation::where('email', 'foo2@gmail.com')->notExpired()->first();
-//dd(Invitation::all()->toArray());
-        $this->assertFalse($invitation2->isExpired());
-        $this->assertInstanceOf(Invitation::class, $invitation22);
         Carbon::setTestNow();
 
+        $nonExpiredInvitation = Invitation::where('email', 'foo2@gmail.com')->notExpired()->first();
+        $this->assertFalse($nonExpiredInvitation->isExpired());
+
+        $this->assertInstanceOf(Invitation::class, $nonExpiredInvitation);
     }
 
 }

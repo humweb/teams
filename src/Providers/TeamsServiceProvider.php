@@ -1,6 +1,6 @@
 <?php
 
-namespace Humweb\Teams;
+namespace Humweb\Teams\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -21,9 +21,10 @@ class TeamsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadMigrationsFrom(__DIR__.'/../resources/migrations');
+        $this->loadRoutesFrom(__DIR__.'/../Http/routes.php');
+        $this->loadMigrationsFrom(__DIR__.'/../../resources/migrations');
 
-        $this->publishes([__DIR__.'/../resources/config' => config_path()], 'config');
+        $this->publishes([__DIR__.'/../../resources/config' => config_path()], 'config');
     }
 
 
@@ -34,6 +35,6 @@ class TeamsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../resources/config/teams.php', 'teams');
+        $this->mergeConfigFrom(__DIR__.'/../../resources/config/teams.php', 'teams');
     }
 }
