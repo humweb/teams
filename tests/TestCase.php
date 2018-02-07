@@ -64,8 +64,9 @@ class TestCase extends Testbench
     protected function getPackageProviders($app)
     {
         return [
-            'Humweb\Teams\TeamsServiceProvider',
-            'Humweb\Teams\EventServiceProvider'
+            'Humweb\Teams\Providers\TeamsServiceProvider',
+//            'Humweb\Teams\Providers\RouteServiceProvider',
+            'Humweb\Teams\Providers\EventServiceProvider'
         ];
     }
 }
