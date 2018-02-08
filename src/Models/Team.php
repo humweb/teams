@@ -40,7 +40,7 @@ class Team extends Model
      */
     public function owner()
     {
-        return $this->belongsTo(config('teams.users_model'), 'owner_id');
+        return $this->belongsTo(config('teams.user_model'), 'owner_id');
     }
 
 
