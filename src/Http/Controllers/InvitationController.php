@@ -9,17 +9,6 @@ use Illuminate\Routing\Controller;
 class InvitationController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-
-    /**
      * Get all of the pending invitations for the user.
      *
      * @param  \Illuminate\Http\Request $request
@@ -112,12 +101,18 @@ class InvitationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getDeleteInvitation($inviteId)
+    public function getDeleteInvitationByOwner(Request $request, $teamId, $inviteId)
     {
-        Invitation::destroy($inviteId);
+        $user = $request->user();
+        
+        $team = $user->teams()
+                     ->where('owner_id', $user->id)
+                     ->findOrFail($teamId);
+
+        $count = $team->invitations()->where('id', $inviteId)->delete();
 
         return response()->json([
-            'message' => 'Invitation was deleted.'
+            'message' => $count > 0 ? 'Invitation was deleted.' : 'Invitation was not deleted.'
         ]);
     }
 
