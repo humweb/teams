@@ -1,8 +1,9 @@
 <?php
 
-namespace Teams\Http\Controllers;
+namespace Humweb\Teams\Http\Controllers;
 
 use Humweb\Teams\Models\Invitation;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -42,7 +43,7 @@ class InviteController extends Controller
     {
         $user = $request->user();
 
-        $this->validate($request, [
+        $request->validate([
             'email' => 'required|max:255|email',
         ]);
 
@@ -67,12 +68,12 @@ class InviteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function postDeleteByOwner(Request $request, $teamId, $inviteId)
+    public function postDeleteByOwner(Request $request, $inviteId)
     {
         $userId = $request->user()->id;
 
-        $invitation = Invitation::whereHas('team', function ($query) use ($useId) {
-            $query->where('owner_id', $useId);
+        $invitation = Invitation::whereHas('team', function ($query) use ($userId) {
+            $query->where('owner_id', $userId);
         })->find($inviteId);
 
         $deleteCount = is_null($invitation) ? 0 : $invitation->delete();

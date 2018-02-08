@@ -1,8 +1,7 @@
 <?php
 
-namespace Teams\Http\Controllers;
+namespace Humweb\Teams\Http\Controllers;
 
-use Humweb\Teams\Models\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -17,7 +16,9 @@ class UserInviteController extends Controller
      */
     public function getInvites(Request $request)
     {
-        return $request->user()->invitations()->with('team.owner')->notExpired()->get();
+        return response()->json([
+            'invites' => $request->user()->invitations()->with('team.owner')->notExpired()->get()
+            ]);
     }
 
 
@@ -40,7 +41,7 @@ class UserInviteController extends Controller
             abort(404);
         }
 
-        $user->joinTeamById($invitation->team_id);
+        $user->joinTeam($invitation->team);
 
         $invitation->delete();
 
