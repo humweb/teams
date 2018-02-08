@@ -23,7 +23,6 @@ class TeamsServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__.'/../Http/routes.php');
         $this->loadMigrationsFrom(__DIR__.'/../../resources/migrations');
-
         $this->publishes([__DIR__.'/../../resources/config' => config_path()], 'config');
     }
 
