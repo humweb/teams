@@ -41,17 +41,18 @@ class UserInviteControllerTest extends TestCase
         $this->team->inviteUserByEmail($this->user->email);
 
         $this->actingAs($this->user)->get('teams/user/invites')->assertJsonStructure([
-                'invites' => [
-                    '*' => [
-                        'id',
-                        'user_id',
-                        'email',
-                        'token',
-                        'team' => ['owner'],
-                    ]
+            'invites' => [
+                '*' => [
+                    'id',
+                    'user_id',
+                    'email',
+                    'token',
+                    'team' => ['owner'],
                 ]
-            ]);
+            ]
+        ]);
     }
+
 
     /**
      * @test
@@ -67,8 +68,8 @@ class UserInviteControllerTest extends TestCase
             'id' => $invite->id
         ]);
         Event::assertDispatched(UserJoinedTeam::class);
-
     }
+
 
     /**
      * @test
@@ -77,12 +78,14 @@ class UserInviteControllerTest extends TestCase
     {
         $invite = $this->team->inviteUserByEmail($this->user->email);
 
-        $this->actingAs($this->user)->get('teams/user/invites/decline/'.$invite->id)->assertSuccessful()->assertJson(['message' => 'Invitation was deleted.']);
+        $this->actingAs($this->user)
+             ->get('teams/user/invites/decline/'.$invite->id)
+             ->assertSuccessful()
+             ->assertJson(['message' => 'Invitation was deleted.']);
 
         $this->assertDatabaseMissing('team_invitations', [
             'id' => $invite->id
         ]);
-
     }
 
 }
