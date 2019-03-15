@@ -29,7 +29,9 @@ class CreateTeamsTables extends Migration
             $table->string('name')->index();
             $table->string('slug')->index();
             $table->text('description')->nullable();
-            $table->text('owner_id');
+            $table->integer('owner_id')->index();
+            $table->integer('captain_id')->index();
+            $table->integer('cocaptain_id')->index();
             $table->timestamps();
         });
 
