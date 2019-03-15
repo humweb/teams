@@ -11,4 +11,9 @@ If you do not already have an account, you may click the following link to get s
 
 <br><br>
 
+@if(!is_null($notes))
+    {{ $notes }}
+    <br><br>
+@endif
+
 Thanks!

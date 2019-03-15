@@ -3,7 +3,7 @@
 namespace Humweb\Teams\Http\Controllers;
 
 use Humweb\Teams\Models\Invitation;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use Humweb\Teams\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -39,25 +39,28 @@ class InviteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function postSend(Request $request, $teamId)
+    public function postSend(Request $request)
     {
         $user = $request->user();
 
         $request->validate([
             'email' => 'required|max:255|email',
+            'team_id' => 'required',
         ]);
 
-        $team = $user->teams()->where('owner_id', $user->id)->findOrFail($teamId);
+        $team = Team::where('owner_id', $user->id)->findOrFail($request->team_id);
 
         if ($team->invitations()->where('email', $request->email)->exists()) {
-            return response()->json(['email' => ['That user is already invited to the team.']], 422);
+            return request()->isJson()
+                ? response()->json(['email' => ['That user is already invited to the team.']], 422)
+                : back()->with('message', 'That user is already invited to the team.');
         }
 
-        $team->inviteUserByEmail($request->email);
+        $team->inviteUserByEmail($request->email, $request->get('message'));
 
-        return response()->json([
-            'message' => 'Invite was sent to '.$request->email.'.'
-        ]);
+        return request()->isJson()
+            ? response()->json(['message' => 'Invite was sent to '.$request->email.'.'])
+            : redirect()->route('teams.get.index')->with('message', 'Invite was sent to '.$request->email.'.');
     }
 
 

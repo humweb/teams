@@ -55,6 +55,16 @@ trait TeamUserTrait
     }
 
 
+    public function createTeam($name, $description = '')
+    {
+        $team = Team::create([
+            'name'        => $name,
+            'slug'        => str_slug($name),
+            'description' => $description,
+            'owner_id'    => $this->id,
+        ]);
+
+    }
     /**
      * Teams user owns
      *
@@ -62,7 +72,8 @@ trait TeamUserTrait
      */
     public function ownedTeams()
     {
-        return $this->teams()->where("owner_id", "=", $this->id);
+        return $this->hasMany(Team::class, 'owner_id');
+//        return $this->teams()->where("owner_id", "=", $this->id);
     }
 
 
@@ -89,6 +100,11 @@ trait TeamUserTrait
         return $team->owner_id === $this->id;
     }
 
+    public function joinTeamFromToken($token)
+    {
+        $team = Invitation::whereToken($token)->first()->team;
+        return $this->joinTeam($team);
+    }
 
     /**
      * Add user to a team

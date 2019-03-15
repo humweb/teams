@@ -35,5 +35,16 @@
     "psr-4": {
       "Humweb\\Teams\\Tests\\": "tests/"
     }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    },
+    "laravel": {
+      "providers": [
+        "Humweb\\Teams\\Providers\\TeamsServiceProvider",
+        "Humweb\\Teams\\Providers\\EventServiceProvider"
+      ]
+    }
   }
 }

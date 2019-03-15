@@ -11,4 +11,9 @@ account settings or by clicking the link below.
 
 <br><br>
 
+@if($message)
+    {{ $message }}
+    <br><br>
+@endif
+
 Thanks!
