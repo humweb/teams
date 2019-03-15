@@ -8,6 +8,7 @@
 namespace Humweb\Teams\Models;
 
 use Carbon\Carbon;
+use Humweb\Auth\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Invitation extends Model
@@ -35,6 +36,14 @@ class Invitation extends Model
     }
 
     /**
+     * Get invitee
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
      * Determine if the invitation is expired.
      *
      * @return bool
@@ -53,4 +62,6 @@ class Invitation extends Model
     {
         return $query->whereDate('created_at', '>', Carbon::now()->subDays(7)->startOfDay());
     }
+
+
 }

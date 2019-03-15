@@ -2,9 +2,9 @@
 
 namespace Humweb\Teams\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use Humweb\Modules\ModuleBaseProvider;
 
-class TeamsServiceProvider extends ServiceProvider
+class TeamsServiceProvider extends ModuleBaseProvider
 {
     /**
      * Indicates if loading of the provider is deferred.

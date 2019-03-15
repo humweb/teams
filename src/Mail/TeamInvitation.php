@@ -25,18 +25,26 @@ class TeamInvitation extends Mailable
     public $team;
 
     public $user;
+    /**
+     * @var null
+     */
+    protected $message;
 
 
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param \Humweb\Teams\Models\Invitation $invitation
+     * @param \Humweb\Teams\Models\Team       $team
+     * @param Model                           $user
+     * @param null                            $message
      */
-    public function __construct(Invitation $invitation, Team $team, $user = null)
+    public function __construct(Invitation $invitation, Team $team, $user = null, $message = null)
     {
         $this->invitation = $invitation;
         $this->team       = $team;
         $this->user       = $user;
+        $this->message    = $message;
     }
 
 
@@ -47,12 +55,13 @@ class TeamInvitation extends Mailable
      */
     public function build()
     {
-        $view = is_null($this->user) ? 'teams::emails.new' : 'teams::emails.existing';
+        $view = is_null($this->user) ? 'teams::email.new' : 'teams::email.existing';
 
         return $this->view($view)->subject('New Invitation!')->with([
             'team'       => $this->team,
             'invitation' => $this->invitation,
-            'user'       => $this->user
+            'user'       => $this->user,
+            'notes'      => $this->message
         ]);
     }
 }

@@ -71,7 +71,7 @@ class Team extends Model
      *
      * @return \Laravel\Spark\Teams\Invitation
      */
-    public function inviteUserByEmail($email)
+    public function inviteUserByEmail($email, $message = '')
     {
         $model      = config('teams.user_model');
         $user       = (new $model)->where('email', $email)->first();
@@ -85,7 +85,7 @@ class Team extends Model
             ]);
         }
 
-        Mail::to($invitation->email)->send(new TeamInvitation($invitation, $this, $user));
+        Mail::to($invitation->email)->send(new TeamInvitation($invitation, $this, $user, $message));
 
         return $invitation;
     }
